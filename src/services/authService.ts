@@ -69,7 +69,7 @@ export async function registerUser(name: string, email: string, password: string
             name,
             email,
             password: hashedPassword,
-            roleId: role.id,
+            role_id: role.id,
         },
     });
 
