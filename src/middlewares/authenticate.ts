@@ -1,22 +1,24 @@
-import { Request, Response, NextFunction } from 'express';
+import {Request, Response, NextFunction} from 'express';
 import jwt from 'jsonwebtoken';
+import {AuthenticatedRequest} from "../types/types";
 
-function authenticate(req: Request, res: Response, next: NextFunction){
-    const token = req.headers.authorization?.split(' ')[1];
+function authenticate(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
+    const authHeader = req.headers.authorization;
 
-    if(!token){
-        res.status(401).json({ error: 'Unauthorized' });
+    if (!authHeader) {
+        res.status(401).json({error: 'Token required'});
         return;
     }
 
+    const token = authHeader.split(' ')[1];
+
     jwt.verify(token, process.env.JWT_SECRET as string, (err: any, decoded: any) => {
-       if(err) {
-           res.status(401).json({error: 'Unauthorized'});
-           return;
-       }
-       // @ts-ignore
-        req.userId = decoded.id;
-       return next();
+        if (err) {
+            res.status(401).json({error: 'Unauthorized'});
+            return;
+        }
+        req.userId = (decoded as { id: number }).id;
+        next();
     });
 }
 
