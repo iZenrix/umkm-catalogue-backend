@@ -41,7 +41,7 @@ export async function loginUser(email: string, password: string) {
             token
         };
     } else {
-        return {error: true, status: 403, message: 'Wrong password'};
+        return {error: true, status: 403, message: 'Wrong password or email'};
     }
 }
 
