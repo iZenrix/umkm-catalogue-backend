@@ -102,6 +102,18 @@ export async function updateCategory(id: number, name: string) {
 }
 
 export async function deleteCategory(id: number) {
+    const existingCategory = await prisma.umkmCategory.findUnique({
+        where: {id}
+    });
+
+    if (!existingCategory) {
+        return {
+            error: true,
+            status: 404,
+            message: 'Category not found'
+        }
+    }
+
     const category = await prisma.umkmCategory.delete({
         where: {id}
     });
