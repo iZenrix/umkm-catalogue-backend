@@ -3,14 +3,19 @@ import {createUmkm, getUmkmList} from "../services/umkmService";
 import {CreateUmkmInput} from "../types/umkmTypes";
 
 export async function createSingleUmkm(req: Request, res: Response) {
-    const data: CreateUmkmInput = req.body;
+    const { name, description, location, categoryId, typeIds, socialMedias, userId, contact, }: CreateUmkmInput = req.body;
 
-    if (!data.name || !data.categoryId || !data.typeIds || !data.userId) {
+    const panoramicImage = (req.files as { [fieldname: string]: Express.Multer.File[] })?.panoramicImage?.[0];
+    const images = (req.files as { [fieldname: string]: Express.Multer.File[] })?.images;
+
+    if (!name || !categoryId || !typeIds || !userId) {
         res.status(400).json({ error: 'Invalid input data' });
         return;
     }
 
     try {
+        const data: CreateUmkmInput = { name, description, location, categoryId, typeIds, socialMedias, userId, contact, panoramicImage, images };
+
         const result = await createUmkm(data);
 
         if (result.error) {

@@ -2,10 +2,11 @@ export interface CreateUmkmInput {
     name: string;
     description?: string;
     location?: string;
-    categoryId: number;
     typeIds: number[];
-    images?: string[];
-    panoramicImage?: string;
+    images?: Express.Multer.File[];
+    panoramicImage?: Express.Multer.File;
     socialMedias?: { platform: string; url: string }[];
     userId: number;
+    categoryId: number;
+    contact: string;
 }
