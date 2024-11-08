@@ -14,16 +14,109 @@ datasource db {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
-  name      String? @db.VarChar(255)
-  email     String  @unique @db.VarChar(255)
-  password  String
-  roleId    Int
-  role      Role    @relation(fields: [roleId], references: [id])
+  id         Int      @id @default(autoincrement())
+  role_id    Int
+  name       String?  @db.VarChar(255)
+  email      String   @unique @db.VarChar(255)
+  password   String
+  role       Role     @relation(fields: [role_id], references: [id])
+  umkms      Umkm[]
+  reviews    Review[]
+  Umkm       Umkm[]   @relation("AdminToUmkm")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
-model Role{
-  id    Int @id @default(autoincrement())
-  name  String  @unique
-  users User[]
+model Role {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+  users      User[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Umkm {
+  id              Int            @id @default(autoincrement())
+  category_id     Int
+  name            String         @unique
+  description     String?
+  location        String?
+  contact         String?
+  social_medias   SocialMedia[]
+  images          UmkmImage[]
+  panoramic_image String?
+  umkm_category   UmkmCategory   @relation(fields: [category_id], references: [id])
+  umkm_types      UmkmType[]     @relation("UmkmToType")
+  user            User[]
+  reviews         Review[]
+  approval_status ApprovalStatus @default(PENDING)
+  approved_at     DateTime?
+  approved_by     Int?
+  admin           User?          @relation("AdminToUmkm", fields: [approved_by], references: [id])
+  created_at      DateTime       @default(now())
+  updated_at      DateTime       @updatedAt
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model UmkmCategory {
+  id         Int        @id @default(autoincrement())
+  name       String     @unique
+  umkms      Umkm[]
+  umkm_types UmkmType[]
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+
+  @@map("umkm_category")
+}
+
+model UmkmType {
+  id            Int          @id @default(autoincrement())
+  category_id   Int
+  name          String       @unique
+  umkm_category UmkmCategory @relation(fields: [category_id], references: [id])
+  umkms         Umkm[]       @relation("UmkmToType")
+  created_at    DateTime     @default(now())
+  updated_at    DateTime     @updatedAt
+
+  @@map("umkm_type")
+}
+
+model SocialMedia {
+  id       Int    @id @default(autoincrement())
+  umkm_id  Int
+  platform String
+  url      String
+
+  umkm Umkm @relation(fields: [umkm_id], references: [id])
+
+  @@map("social_media")
+}
+
+model UmkmImage {
+  id         Int      @id @default(autoincrement())
+  umkm_id    Int
+  url        String
+  umkm       Umkm     @relation(fields: [umkm_id], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("umkm_image")
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  umkm_id    Int
+  user_id    Int
+  rating     Int
+  comment    String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  umkm Umkm @relation(fields: [umkm_id], references: [id])
+  user User @relation(fields: [user_id], references: [id])
 }
