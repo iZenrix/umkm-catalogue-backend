@@ -7,8 +7,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "pnpx ts-node src/server.ts",
-    "build": "pnpx tsc"
+    "start": "pnpx ts-node src/server.ts"
   },
   "keywords": [],
   "author": "",
