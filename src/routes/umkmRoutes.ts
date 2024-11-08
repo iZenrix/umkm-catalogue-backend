@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import {createSingleUmkm, getAllUmkm} from "../controllers/umkmController";
+import {createSingleUmkm, getAllUmkm, deleteSingleUmkm, updateSingleUmkm, getSingleUmkm} from "../controllers/umkmController";
 import authenticate from '../middlewares/authenticate';
 import multer from "multer";
 
@@ -11,6 +11,12 @@ router.post('/', upload.fields([
     {name: 'images', maxCount: 3}
 ]), authenticate, createSingleUmkm);
 router.get('/all', authenticate, getAllUmkm);
+router.get('/:id', authenticate, getSingleUmkm);
+router.put('/:id', upload.fields([
+    {name: 'panoramicImage', maxCount: 1},
+    {name: 'images', maxCount: 3}
+]), authenticate, updateSingleUmkm);
+router.delete('/:id', authenticate, deleteSingleUmkm);
 
 export default router;
 
