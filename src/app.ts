@@ -16,4 +16,8 @@ app.use('/type', typeRoutes);
 app.use('/umkm', umkmRoutes);
 app.use('/review', reviewRoutes);
 
+app.get('/', (req, res) => {
+    res.send('UMKM Catalogue Backend');
+});
+
 export default app;
