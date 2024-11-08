@@ -1,16 +1,27 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE `User` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `role_id` INTEGER NOT NULL,
+    `name` VARCHAR(255) NULL,
+    `email` VARCHAR(255) NOT NULL,
+    `password` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
 
-  - You are about to drop the column `roleId` on the `user` table. All the data in the column will be lost.
-  - Added the required column `role_id` to the `User` table without a default value. This is not possible if the table is not empty.
+    UNIQUE INDEX `User_email_key`(`email`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-*/
--- DropForeignKey
-ALTER TABLE `user` DROP FOREIGN KEY `User_roleId_fkey`;
+-- CreateTable
+CREATE TABLE `Role` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
 
--- AlterTable
-ALTER TABLE `user` DROP COLUMN `roleId`,
-    ADD COLUMN `role_id` INTEGER NOT NULL;
+    UNIQUE INDEX `Role_name_key`(`name`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Umkm` (
@@ -19,7 +30,13 @@ CREATE TABLE `Umkm` (
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
     `location` VARCHAR(191) NULL,
+    `contact` VARCHAR(191) NULL,
     `panoramic_image` VARCHAR(191) NULL,
+    `approval_status` ENUM('PENDING', 'APPROVED', 'REJECTED') NOT NULL DEFAULT 'PENDING',
+    `approved_at` DATETIME(3) NULL,
+    `approved_by` INTEGER NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `Umkm_name_key`(`name`),
     PRIMARY KEY (`id`)
@@ -29,6 +46,8 @@ CREATE TABLE `Umkm` (
 CREATE TABLE `umkm_category` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `umkm_category_name_key`(`name`),
     PRIMARY KEY (`id`)
@@ -39,6 +58,8 @@ CREATE TABLE `umkm_type` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `category_id` INTEGER NOT NULL,
     `name` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `umkm_type_name_key`(`name`),
     PRIMARY KEY (`id`)
@@ -59,6 +80,8 @@ CREATE TABLE `umkm_image` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `umkm_id` INTEGER NOT NULL,
     `url` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -70,6 +93,8 @@ CREATE TABLE `Review` (
     `user_id` INTEGER NOT NULL,
     `rating` INTEGER NOT NULL,
     `comment` VARCHAR(191) NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -97,6 +122,9 @@ ALTER TABLE `User` ADD CONSTRAINT `User_role_id_fkey` FOREIGN KEY (`role_id`) RE
 
 -- AddForeignKey
 ALTER TABLE `Umkm` ADD CONSTRAINT `Umkm_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `umkm_category`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Umkm` ADD CONSTRAINT `Umkm_approved_by_fkey` FOREIGN KEY (`approved_by`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `umkm_type` ADD CONSTRAINT `umkm_type_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `umkm_category`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
