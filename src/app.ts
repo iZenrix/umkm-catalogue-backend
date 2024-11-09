@@ -5,8 +5,20 @@ import categoryRoutes from "./routes/CategoryRoutes";
 import typeRoutes from "./routes/TypeRoutes";
 import umkmRoutes from "./routes/umkmRoutes";
 import reviewRoutes from "./routes/reviewRoutes";
+import cors from "cors";
 
 const app = express();
+
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    credentials: true,
+    optionsSuccessStatus: 200,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 app.use('/users', userRoutes);
