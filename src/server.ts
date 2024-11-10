@@ -1,11 +1,11 @@
 import app from './app';
 import dotenv from 'dotenv';
+import { config } from './config/env';
 
-dotenv.config();
+const env = process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.dev';
+dotenv.config({path: env});
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-    console.log(`Server is running`);
+app.listen(config.port, () => {
+    console.log(`Server running in ${config.nodeEnv} mode on port ${config.port}`);
 });
 
