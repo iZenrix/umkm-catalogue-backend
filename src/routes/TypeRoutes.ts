@@ -14,9 +14,9 @@ const router = Router();
 
 router.get('/all', authenticate, getAllTypes);
 router.get('/:id', authenticate, getSingleType);
-router.post('/', authenticate, createSingleType);
-router.put('/:id', authenticate, updateSingleType);
-router.delete('/:id', authenticate, deleteSingleType);
-router.get('/category/:id', authenticate, getTypesByCategoryFunc);
+router.post('/', authenticate, authorize('admin'), createSingleType);
+router.put('/:id', authenticate, authorize('admin'), updateSingleType);
+router.delete('/:id', authenticate, authorize('admin'), deleteSingleType);
+router.get('/category/:id', authenticate, authorize('admin'), getTypesByCategoryFunc);
 
 export default router;
