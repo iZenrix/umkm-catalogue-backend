@@ -45,6 +45,8 @@ model Umkm {
   social_medias   SocialMedia[]
   images          UmkmImage[]
   panoramic_image String?
+  profile_image   String?
+  product_image   String?
   umkm_category   UmkmCategory   @relation(fields: [category_id], references: [id])
   umkm_types      UmkmType[]     @relation("UmkmToType")
   user            User[]
@@ -92,7 +94,9 @@ model SocialMedia {
   platform String
   url      String
 
-  umkm Umkm @relation(fields: [umkm_id], references: [id])
+  umkm       Umkm     @relation(fields: [umkm_id], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("social_media")
 }
