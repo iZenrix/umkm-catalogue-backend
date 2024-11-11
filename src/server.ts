@@ -2,7 +2,7 @@ import app from './app';
 import dotenv from 'dotenv';
 import { config } from './config/env';
 
-const env = process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.dev';
+const env = process.env.NODE_ENV === 'production' ? '.env.prod' : '.env';
 dotenv.config({path: env});
 
 app.listen(config.port, () => {
