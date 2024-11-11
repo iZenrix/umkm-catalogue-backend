@@ -80,6 +80,54 @@ export async function createUmkm(data: CreateUmkmInput) {
         }
     }
 
+    let profileImageUrl = '';
+    if (data.profileImage) {
+        try {
+            const file = data.profileImage as Express.Multer.File;
+
+            console.log('data profile image:', data.profileImage.originalname);
+
+            const profileBlobResponse = await put(data.profileImage.originalname, file.buffer, {
+                access: 'public',
+                token: process.env.VERCEL_BLOB_TOKEN,
+                contentType: data.profileImage.mimetype,
+            });
+
+            profileImageUrl = profileBlobResponse.url;
+        } catch (error) {
+            console.error('Error uploading profile image:', error);
+            return {
+                error: true,
+                status: 500,
+                message: 'Failed to upload profile image'
+            };
+        }
+    }
+
+    let productImageUrl = '';
+    if (data.productImage) {
+        try {
+            const file = data.productImage as Express.Multer.File;
+
+            console.log('data product image:', data.productImage.originalname);
+
+            const productBlobResponse = await put(data.productImage.originalname, file.buffer, {
+                access: 'public',
+                token: process.env.VERCEL_BLOB_TOKEN,
+                contentType: data.productImage.mimetype,
+            });
+
+            productImageUrl = productBlobResponse.url;
+        } catch (error) {
+            console.error('Error uploading product image:', error);
+            return {
+                error: true,
+                status: 500,
+                message: 'Failed to upload product image'
+            };
+        }
+    }
+
     try {
         const umkm = await prisma.umkm.create({
             data: {
@@ -95,6 +143,8 @@ export async function createUmkm(data: CreateUmkmInput) {
                 images: {
                     create: imageUrls
                 },
+                profile_image: profileImageUrl,
+                product_image: productImageUrl,
                 social_medias: {
                     create: data.socialMedias?.map((socialMedia) => ({
                         platform: socialMedia.platform,
@@ -219,6 +269,54 @@ export async function updateUmkm(id: number, data: CreateUmkmInput) {
         }
     }
 
+    let profileImageUrl = '';
+    if (data.profileImage) {
+        try {
+            const file = data.profileImage as Express.Multer.File;
+
+            console.log('data profile image:', data.profileImage.originalname);
+
+            const profileBlobResponse = await put(data.profileImage.originalname, file.buffer, {
+                access: 'public',
+                token: process.env.VERCEL_BLOB_TOKEN,
+                contentType: data.profileImage.mimetype,
+            });
+
+            profileImageUrl = profileBlobResponse.url;
+        } catch (error) {
+            console.error('Error uploading profile image:', error);
+            return {
+                error: true,
+                status: 500,
+                message: 'Failed to upload profile image'
+            };
+        }
+    }
+
+    let productImageUrl = '';
+    if (data.productImage) {
+        try {
+            const file = data.productImage as Express.Multer.File;
+
+            console.log('data product image:', data.productImage.originalname);
+
+            const productBlobResponse = await put(data.productImage.originalname, file.buffer, {
+                access: 'public',
+                token: process.env.VERCEL_BLOB_TOKEN,
+                contentType: data.productImage.mimetype,
+            });
+
+            productImageUrl = productBlobResponse.url;
+        } catch (error) {
+            console.error('Error uploading product image:', error);
+            return {
+                error: true,
+                status: 500,
+                message: 'Failed to upload product image'
+            };
+        }
+    }
+
     try {
         const umkm = await prisma.umkm.update({
             where: {id},
@@ -234,6 +332,8 @@ export async function updateUmkm(id: number, data: CreateUmkmInput) {
                 images: {
                     create: imageUrls
                 },
+                profile_image: profileImageUrl,
+                product_image: productImageUrl,
                 social_medias: {
                     create: data.socialMedias?.map((socialMedia) => ({
                         platform: socialMedia.platform,

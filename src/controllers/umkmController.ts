@@ -16,6 +16,8 @@ export async function createSingleUmkm(req: Request, res: Response) {
 
     const panoramicImage = (req.files as { [fieldname: string]: Express.Multer.File[] })?.panoramicImage?.[0];
     const images = (req.files as { [fieldname: string]: Express.Multer.File[] })?.images;
+    const profileImage = (req.files as { [fieldname: string]: Express.Multer.File[] })?.profileImage?.[0];
+    const productImage = (req.files as { [fieldname: string]: Express.Multer.File[] })?.productImage?.[0];
 
     if (!name || !categoryId || !typeIds || !userId) {
         res.status(400).json({error: 'Invalid input data'});
@@ -33,7 +35,9 @@ export async function createSingleUmkm(req: Request, res: Response) {
             userId,
             contact,
             panoramicImage,
-            images
+            images,
+            profileImage,
+            productImage
         };
 
         const result = await createUmkm(data);
@@ -131,6 +135,8 @@ export async function updateSingleUmkm(req: Request, res: Response) {
 
     const panoramicImage = (req.files as { [fieldname: string]: Express.Multer.File[] })?.panoramicImage?.[0];
     const images = (req.files as { [fieldname: string]: Express.Multer.File[] })?.images;
+    const profileImage = (req.files as { [fieldname: string]: Express.Multer.File[] })?.profileImage?.[0];
+    const productImage = (req.files as { [fieldname: string]: Express.Multer.File[] })?.productImage?.[0];
 
     if (!id || !name || !categoryId || !typeIds || !userId) {
         res.status(400).json({error: 'Invalid input data'});
@@ -148,7 +154,9 @@ export async function updateSingleUmkm(req: Request, res: Response) {
             userId,
             contact,
             panoramicImage,
-            images
+            images,
+            profileImage,
+            productImage
         };
 
         const result = await updateUmkm(parseInt(id), data);
