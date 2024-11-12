@@ -54,6 +54,7 @@ model Umkm {
   approval_status ApprovalStatus @default(PENDING)
   approved_at     DateTime?
   approved_by     Int?
+  rejection_note  String?
   admin           User?          @relation("AdminToUmkm", fields: [approved_by], references: [id])
   created_at      DateTime       @default(now())
   updated_at      DateTime       @updatedAt

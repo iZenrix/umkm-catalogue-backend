@@ -37,6 +37,7 @@ CREATE TABLE `Umkm` (
     `approval_status` ENUM('PENDING', 'APPROVED', 'REJECTED') NOT NULL DEFAULT 'PENDING',
     `approved_at` DATETIME(3) NULL,
     `approved_by` INTEGER NULL,
+    `rejection_note` VARCHAR(191) NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
