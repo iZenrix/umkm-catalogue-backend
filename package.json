@@ -8,24 +8,20 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "cross-env NODE_ENV=development ts-node-dev --respawn src/server.ts",
-    "build": "tsc",
+    "build": "rimraf dist && tsc",
+    "ts.check": "tsc --project tsconfig.json",
     "start:prod": "cross-env NODE_ENV=production node dist/server.js",
     "build:prod": "pnpm prisma:generate && pnpm build",
     "postinstall": "prisma generate",
-
     "env:check": "cross-env NODE_ENV=production ts-node scripts/checkEnv.ts",
-
     "migrate:dev": "prisma migrate dev",
     "migrate:dev:create": "prisma migrate dev --create-only",
     "migrate:dev:reset": "prisma migrate reset",
-
     "migrate:prod": "dotenv -e .env.prod -- prisma migrate deploy",
     "migrate:prod:status": "dotenv -e .env.prod -- prisma migrate status",
     "migrate:prod:reset": "dotenv -e .env.prod -- prisma migrate reset",
-
     "db:seed:dev": "prisma db seed",
     "db:seed:prod": "dotenv -e .env.prod -- prisma db seed",
-
     "prisma:studio:prod": "dotenv -e .env.prod -- prisma studio",
     "prisma:generate:prod": "dotenv -e .env.prod -- prisma generate",
     "prisma:studio": "prisma studio",
@@ -46,7 +42,9 @@
     "@types/node": "^22.8.7",
     "cross-env": "^7.0.3",
     "dotenv-cli": "^7.4.2",
+    "pre-commit": "^1.2.2",
     "prisma": "^5.22.0",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.6.3"
@@ -61,5 +59,9 @@
     "googleapis": "^144.0.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "1.4.5-lts.1"
-  }
+  },
+  "pre-commit": [
+    "ts.check",
+    "build"
+  ]
 }
