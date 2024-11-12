@@ -32,9 +32,12 @@ CREATE TABLE `Umkm` (
     `location` VARCHAR(191) NULL,
     `contact` VARCHAR(191) NULL,
     `panoramic_image` VARCHAR(191) NULL,
+    `profile_image` VARCHAR(191) NULL,
+    `product_image` VARCHAR(191) NULL,
     `approval_status` ENUM('PENDING', 'APPROVED', 'REJECTED') NOT NULL DEFAULT 'PENDING',
     `approved_at` DATETIME(3) NULL,
     `approved_by` INTEGER NULL,
+    `rejection_note` VARCHAR(191) NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
@@ -71,6 +74,8 @@ CREATE TABLE `social_media` (
     `umkm_id` INTEGER NOT NULL,
     `platform` VARCHAR(191) NOT NULL,
     `url` VARCHAR(191) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

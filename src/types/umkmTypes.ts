@@ -5,6 +5,8 @@ export interface CreateUmkmInput {
     typeIds: number[];
     images?: Express.Multer.File[];
     panoramicImage?: Express.Multer.File;
+    profileImage?: Express.Multer.File;
+    productImage?: Express.Multer.File;
     socialMedias?: { platform: string; url: string }[];
     userId: number;
     categoryId: number;
