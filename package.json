@@ -12,7 +12,6 @@
     "start:prod": "cross-env NODE_ENV=production node dist/server.js",
     "build:prod": "pnpm prisma:generate && pnpm build",
     "postinstall": "prisma generate",
-    "vercel-build": "prisma generate && tsc",
 
     "env:check": "cross-env NODE_ENV=production ts-node scripts/checkEnv.ts",
 
