@@ -2,6 +2,12 @@ import prisma from '../models';
 import {CreateUmkmInput} from "../types/umkmTypes";
 import {put} from '@vercel/blob';
 
+enum ApprovalStatus {
+    PENDING = 'PENDING',
+    APPROVED = 'APPROVED',
+    REJECTED = 'REJECTED',
+}
+
 export async function getUmkmList() {
     const umkmList = await prisma.umkm.findMany();
 
@@ -401,4 +407,70 @@ export async function deleteUmkm(id: number) {
         message: 'UMKM deleted successfully',
         data: umkm
     }
+}
+
+export async function umkmValidation(userId: number, id: number, status: string, rejectionNote?: string) {
+    const existingUmkm = await prisma.umkm.findUnique({
+        where: { id }
+    });
+
+    if (!existingUmkm) {
+        return {
+            error: true,
+            status: 404,
+            message: 'UMKM not found'
+        };
+    }
+
+    if (![ApprovalStatus.APPROVED, ApprovalStatus.REJECTED].includes(status as ApprovalStatus)) {
+        return {
+            error: true,
+            status: 400,
+            message: 'Invalid status'
+        };
+    }
+
+    if (status === ApprovalStatus.REJECTED && !rejectionNote) {
+        return {
+            error: true,
+            status: 400,
+            message: 'Rejection note is required'
+        };
+    }
+
+    if (existingUmkm.approval_status !== ApprovalStatus.PENDING) {
+        return {
+            error: true,
+            status: 400,
+            message: 'UMKM is not pending for approval'
+        };
+    }
+
+    const updateData: any = {
+        approval_status: status as ApprovalStatus,
+        approved_by: userId,
+        approved_at: new Date(),
+    };
+
+    if (status === ApprovalStatus.REJECTED) {
+        updateData.rejection_note = rejectionNote;
+    }
+
+    const umkm = await prisma.umkm.update({
+        where: { id },
+        data: updateData
+    });
+
+    if (!umkm) {
+        return {
+            error: true,
+            status: 500,
+            message: `UMKM not ${status === ApprovalStatus.APPROVED ? 'approved' : 'rejected'}`
+        };
+    }
+
+    return {
+        message: `UMKM ${status === ApprovalStatus.APPROVED ? 'approved' : 'rejected'} successfully`,
+        data: umkm
+    };
 }

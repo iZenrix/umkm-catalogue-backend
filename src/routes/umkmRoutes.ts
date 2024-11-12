@@ -1,7 +1,8 @@
 import {Router} from 'express';
-import {createSingleUmkm, getAllUmkm, deleteSingleUmkm, updateSingleUmkm, getSingleUmkm} from "../controllers/umkmController";
+import {createSingleUmkm, getAllUmkm, deleteSingleUmkm, updateSingleUmkm, getSingleUmkm, validateUmkm} from "../controllers/umkmController";
 import authenticate from '../middlewares/authenticate';
 import multer from "multer";
+import authorize from "../middlewares/authorize";
 
 const router = Router();
 const upload = multer({storage: multer.memoryStorage()});
@@ -21,6 +22,7 @@ router.put('/:id', upload.fields([
     {name: 'productImage', maxCount: 1},
 ]), authenticate, updateSingleUmkm);
 router.delete('/:id', authenticate, deleteSingleUmkm);
+router.post('/:id/validate', authenticate, authorize('admin'), validateUmkm);
 
 export default router;
 
