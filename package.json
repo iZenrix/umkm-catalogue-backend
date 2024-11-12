@@ -11,10 +11,9 @@
 
     "vercel-build": "prisma generate && prisma migrate deploy && tsc",
 
-    "build": "rimraf dist && tsc",
+    "build": "tsc",
 
     "start": "node dist/server.js",
-
 
     "ts.check": "tsc --project tsconfig.json",
     "start:prod": "cross-env NODE_ENV=production node dist/server.js",
