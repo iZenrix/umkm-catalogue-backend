@@ -32,4 +32,11 @@ app.get('/', (req, res) => {
     res.send('UMKM Catalogue Backend');
 });
 
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error(err.stack);
+    res.status(err.status || 500).json({
+        message: err.message || 'Internal Server Error',
+    });
+});
+
 export default app;
