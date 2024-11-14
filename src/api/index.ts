@@ -20,6 +20,6 @@ index.use("/category", categoryRoutes);
 index.use("/type", typeRoutes);
 index.use("/umkm", umkmRoutes);
 index.use("/review", reviewRoutes);
-index.use("/users", userRoutes);
+index.use("/user", userRoutes);
 
 export default index;
