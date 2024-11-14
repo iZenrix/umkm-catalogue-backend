@@ -1,11 +1,6 @@
 import express from 'express';
-import userRoutes from "./routes/UserRoutes";
-import authRoutes from "./routes/AuthRoutes";
-import categoryRoutes from "./routes/CategoryRoutes";
-import typeRoutes from "./routes/TypeRoutes";
-import umkmRoutes from "./routes/umkmRoutes";
-import reviewRoutes from "./routes/reviewRoutes";
 import cors from "cors";
+import apiRouter from "./api";
 
 const app = express();
 
@@ -18,25 +13,14 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions));
-
 app.use(express.json());
 
-app.use('/users', userRoutes);
-app.use('/', authRoutes);
-app.use('/category', categoryRoutes);
-app.use('/type', typeRoutes);
-app.use('/umkm', umkmRoutes);
-app.use('/review', reviewRoutes);
-
 app.get('/', (req, res) => {
-    res.send('UMKM Catalogue Backend');
-});
-
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.error(err.stack);
-    res.status(err.status || 500).json({
-        message: err.message || 'Internal Server Error',
+    res.json({
+        message: 'ooomaga',
     });
 });
+
+app.use('/api/v1', apiRouter);
 
 export default app;
