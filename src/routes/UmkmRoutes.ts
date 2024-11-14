@@ -11,7 +11,7 @@ router.post('/', upload.fields([
     {name: 'panoramicImage', maxCount: 1},
     {name: 'images', maxCount: 3},
     {name: 'profileImage', maxCount: 1},
-    {name: 'productImage', maxCount: 1},
+    {name: 'productImage', maxCount: 3},
 ]), authenticate, createSingleUmkm);
 router.get('/all', authenticate, getAllUmkm);
 router.get('/:id', authenticate, getSingleUmkm);
