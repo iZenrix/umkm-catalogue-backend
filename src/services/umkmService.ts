@@ -438,14 +438,6 @@ export async function umkmValidation(userId: number, id: number, status: string,
         };
     }
 
-    if (existingUmkm.approval_status !== ApprovalStatus.PENDING) {
-        return {
-            error: true,
-            status: 400,
-            message: 'UMKM is not pending for approval'
-        };
-    }
-
     const updateData: any = {
         approval_status: status as ApprovalStatus,
         approved_by: userId,
