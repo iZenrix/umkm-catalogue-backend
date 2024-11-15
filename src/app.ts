@@ -23,14 +23,12 @@ app.get('/', (req, res) => {
     });
 });
 
-app.use('/api', createProxyMiddleware({
+app.use('/api/v1', createProxyMiddleware({
     target: 'https://umkm-catalogue-backend.vercel.app',
     changeOrigin: true,
     pathRewrite: {
         '^/api': ''
     }
-}));
-
-app.use('/api/v1', apiRouter);
+}), apiRouter);
 
 export default app;
