@@ -2,7 +2,7 @@ import {Request, Response} from 'express';
 import {createProduct, updateProduct, deleteProduct, getUmkmProducts} from "../services/productService";
 
 export async function createSingleProduct(req: Request, res: Response) {
-    const {name, price, description, umkmId} = req.body as {name: string, price: number, stock: number, description: string, umkmId: number};
+    const {name, price, description, umkmId} = req.body as {name: string, price: number, description: string, umkmId: number};
 
     const productImages = (req.files as { [fieldname: string]: Express.Multer.File[] })?.productImages;
 
