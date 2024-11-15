@@ -11,8 +11,8 @@ import authorize from '../middlewares/authorize';
 
 const router = Router();
 
-router.get('/all', authenticate, getAllCategories);
-router.get('/:id', authenticate, getSingleCategory);
+router.get('/all', getAllCategories);
+router.get('/:id', getSingleCategory);
 router.post('/', authenticate, authorize('admin'), createSingleCategory);
 router.put('/:id', authenticate, authorize('admin'), updateSingleCategory);
 router.delete('/:id', authenticate, authorize('admin'), deleteSingleCategory);
