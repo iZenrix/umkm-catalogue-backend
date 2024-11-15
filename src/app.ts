@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from "cors";
 import apiRouter from "./api";
+import {createProxyMiddleware} from "http-proxy-middleware";
 
 const app = express();
 
@@ -21,6 +22,14 @@ app.get('/', (req, res) => {
         message: 'ooomaga',
     });
 });
+
+app.use('/api', createProxyMiddleware({
+    target: 'https://umkm-catalogue-backend.vercel.app',
+    changeOrigin: true,
+    pathRewrite: {
+        '^/api': ''
+    }
+}));
 
 app.use('/api/v1', apiRouter);
 
