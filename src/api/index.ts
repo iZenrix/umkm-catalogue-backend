@@ -6,6 +6,7 @@ import typeRoutes from "../routes/TypeRoutes";
 import umkmRoutes from "../routes/UmkmRoutes";
 import reviewRoutes from "../routes/ReviewRoutes";
 import userRoutes from "../routes/UserRoutes";
+import productRoutes from "../routes/ProductRoutes";
 
 const index = Router();
 
@@ -21,5 +22,6 @@ index.use("/type", typeRoutes);
 index.use("/umkm", umkmRoutes);
 index.use("/review", reviewRoutes);
 index.use("/user", userRoutes);
+index.use("/product", productRoutes);
 
 export default index;
