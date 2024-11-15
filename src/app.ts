@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from "cors";
 import apiRouter from "./api";
+import {createProxyMiddleware} from "http-proxy-middleware";
 
 const app = express();
 
@@ -27,6 +28,10 @@ app.get('/', (req, res) => {
     });
 });
 
-app.use('/api/v1', apiRouter);
+app.use('/api/v1', createProxyMiddleware({
+    target: 'http://localhost:8080/',
+    changeOrigin: true,
+    secure: false
+}), apiRouter);
 
 export default app;
