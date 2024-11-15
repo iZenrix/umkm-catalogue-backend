@@ -11,7 +11,7 @@ app.use(function(req, res, next) {
 });
 
 const corsOptions = {
-    origin: '*',
+    origin: 'https://umkm-catalogue-frontend.vercel.app/',
     credentials: true,
     optionsSuccessStatus: 200,
     allowedHeaders: ['Content-Type', 'Authorization'],
