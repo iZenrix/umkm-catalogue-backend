@@ -1,17 +1,11 @@
 import express from 'express';
 import cors from "cors";
 import apiRouter from "./api";
-import {createProxyMiddleware} from "http-proxy-middleware";
 
 const app = express();
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "https://umkm-catalogue-frontend.vercel.app/");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
-
 const corsOptions = {
+    AccessControlAllowOrigin: '*',
     origin: 'https://umkm-catalogue-frontend.vercel.app/',
     credentials: true,
     optionsSuccessStatus: 200,
@@ -28,10 +22,6 @@ app.get('/', (req, res) => {
     });
 });
 
-app.use('/api/v1', createProxyMiddleware({
-    target: 'http://localhost:8080/',
-    changeOrigin: true,
-    secure: false
-}), apiRouter);
+app.use('/api/v1', apiRouter);
 
 export default app;
