@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  // output   = "../../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -23,7 +22,7 @@ model User {
   role       Role     @relation(fields: [role_id], references: [id])
   umkms      Umkm[]
   reviews    Review[]
-  Umkm       Umkm[]   @relation("AdminToUmkm")
+  umkm       Umkm[]   @relation("AdminToUmkm")
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
@@ -36,18 +35,24 @@ model Role {
   updated_at DateTime @updatedAt
 }
 
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model Umkm {
   id              Int            @id @default(autoincrement())
   category_id     Int
   name            String         @unique
   description     String?
-  location        String?
+  products        UmkmProduct[]
   contact         String?
+  location        Location[]
   social_medias   SocialMedia[]
   images          UmkmImage[]
   panoramic_image String?
   profile_image   String?
-  product_image   String?
   umkm_category   UmkmCategory   @relation(fields: [category_id], references: [id])
   umkm_types      UmkmType[]     @relation("UmkmToType")
   user            User[]
@@ -56,15 +61,10 @@ model Umkm {
   approved_at     DateTime?
   approved_by     Int?
   rejection_note  String?
+  view_count      Int            @default(0)
   admin           User?          @relation("AdminToUmkm", fields: [approved_by], references: [id])
   created_at      DateTime       @default(now())
   updated_at      DateTime       @updatedAt
-}
-
-enum ApprovalStatus {
-  PENDING
-  APPROVED
-  REJECTED
 }
 
 model UmkmCategory {
@@ -125,4 +125,40 @@ model Review {
 
   umkm Umkm @relation(fields: [umkm_id], references: [id])
   user User @relation(fields: [user_id], references: [id])
+}
+
+model UmkmProduct {
+  id            Int            @id @default(autoincrement())
+  umkm_id       Int
+  name          String         @unique
+  description   String?
+  price         Int
+  product_image ProductImage[]
+  umkm          Umkm           @relation(fields: [umkm_id], references: [id])
+  created_at    DateTime       @default(now())
+  updated_at    DateTime       @updatedAt
+
+  @@map("umkm_product")
+}
+
+model ProductImage {
+  id         Int         @id @default(autoincrement())
+  product_id Int
+  url        String
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  product    UmkmProduct @relation(fields: [product_id], references: [id])
+
+  @@map("product_image")
+}
+
+model Location {
+  id         Int      @id @default(autoincrement())
+  umkm_id    Int
+  name       String   @unique
+  latitude   Float?
+  longitude  Float?
+  umkm       Umkm     @relation(fields: [umkm_id], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
