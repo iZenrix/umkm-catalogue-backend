@@ -10,6 +10,6 @@ const upload = multer({storage: multer.memoryStorage()});
 router.post('/', upload.array('productImages', 3), authenticate, createSingleProduct);
 router.get('/all', authenticate, getAllProducts);
 router.put('/:id', upload.array('productImages', 3), authenticate, updateSingleProduct);
-router.delete('/:id', authenticate, authorize('admin'), deleteSingleProduct);
+router.delete('/:id', authenticate, deleteSingleProduct);
 
 export default router;
