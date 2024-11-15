@@ -5,7 +5,7 @@ import apiRouter from "./api";
 const app = express();
 
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173', 'https://umkm-catalogue-frontend.vercel.app/'],
     credentials: true,
     optionsSuccessStatus: 200,
     allowedHeaders: ['Content-Type', 'Authorization'],
