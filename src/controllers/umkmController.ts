@@ -49,7 +49,10 @@ export async function createSingleUmkm(req: Request, res: Response) {
         res.status(201).json({message: result.message, data: result.data});
         return;
     } catch (error) {
-        res.status(500).json({error: error});
+        res.status(500).json({
+            error: error,
+            message: 'Internal Server Error',
+        });
         return;
     }
 }
@@ -66,7 +69,10 @@ export async function getAllUmkm(req: Request, res: Response) {
         res.json(result);
         return;
     } catch (error) {
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({
+            error: error,
+            message: 'Internal Server Error',
+        });
         return;
     }
 }
@@ -90,7 +96,10 @@ export async function getSingleUmkm(req: Request, res: Response) {
         res.json(result);
         return;
     } catch (error) {
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({
+            error: error,
+            message: 'Internal Server Error',
+        });
         return;
     }
 }
@@ -114,7 +123,10 @@ export async function deleteSingleUmkm(req: Request, res: Response) {
         res.json(result);
         return;
     } catch (error) {
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({
+            error: error,
+            message: 'Internal Server Error',
+        });
         return;
     }
 }
@@ -166,7 +178,10 @@ export async function updateSingleUmkm(req: Request, res: Response) {
         res.json(result);
         return;
     } catch (error) {
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({
+            error: error,
+            message: 'Internal Server Error',
+        });
         return;
     }
 }
@@ -192,7 +207,10 @@ export async function validateUmkm(req: AuthenticatedRequest, res: Response) {
         res.json(result);
         return;
     } catch (error) {
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({
+            error: error,
+            message: 'Internal Server Error',
+        });
         return;
     }
 }
@@ -216,7 +234,10 @@ export async function viewCountIncrement(req: Request, res: Response) {
         res.json(result);
         return;
     } catch (error) {
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({
+            error: error,
+            message: 'Internal Server Error',
+        });
         return;
     }
 }

@@ -24,7 +24,10 @@ export async function createSingleReview(req: Request, res: Response) {
         res.status(201).json({message: result.message, data: result.data});
         return;
     } catch (error) {
-        res.status(500).json({error: error});
+        res.status(500).json({
+            error: error,
+            message: 'Internal Server Error',
+        });
         return;
     }
 }
@@ -43,7 +46,10 @@ export async function getSingleReview(req: Request, res: Response) {
         res.json(result);
         return;
     } catch (error) {
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({
+            error: error,
+            message: 'Internal Server Error',
+        });
         return;
     }
 }
@@ -63,7 +69,10 @@ export async function updateSingleReview(req: Request, res: Response) {
         res.json(result);
         return;
     } catch (error) {
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({
+            error: error,
+            message: 'Internal Server Error',
+        });
         return;
     }
 }
@@ -82,7 +91,10 @@ export async function deleteSingleReview(req: Request, res: Response) {
         res.json(result);
         return;
     } catch (error) {
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({
+            error: error,
+            message: 'Internal Server Error',
+        });
         return;
     }
 }
@@ -101,7 +113,10 @@ export async function getReviewsByUMKMId(req: Request, res: Response) {
         res.json(result);
         return;
     } catch (error) {
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({
+            error: error,
+            message: 'Internal Server Error',
+        });
         return;
     }
 }
@@ -120,7 +135,10 @@ export async function getReviewsByUserId(req: Request, res: Response) {
         res.json(result);
         return;
     } catch (error) {
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({
+            error: error,
+            message: 'Internal Server Error',
+        });
         return;
     }
 }

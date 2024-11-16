@@ -17,7 +17,10 @@ export async function createSingleProduct(req: Request, res: Response) {
         res.status(201).json({message: result.message, data: result.data});
         return;
     } catch (error) {
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({
+            error: error,
+            message: 'Internal Server Error',
+        });
         return;
     }
 }
@@ -36,8 +39,10 @@ export async function getAllProducts(req: Request, res: Response) {
         res.json(result);
         return;
     } catch (error) {
-        console.log(error);
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({
+            error: error,
+            message: 'Internal Server Error',
+        });
         return;
     }
 }
@@ -58,7 +63,10 @@ export async function updateSingleProduct(req: Request, res: Response) {
         res.json(result);
         return;
     } catch (error) {
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({
+            error: error,
+            message: 'Internal Server Error',
+        });
         return;
     }
 }
@@ -77,7 +85,10 @@ export async function deleteSingleProduct(req: Request, res: Response) {
         res.json(result);
         return;
     } catch (error) {
-        res.status(500).json({error: 'Internal Server Error'});
+        res.status(500).json({
+            error: error,
+            message: 'Internal Server Error',
+        });
         return;
     }
 }
