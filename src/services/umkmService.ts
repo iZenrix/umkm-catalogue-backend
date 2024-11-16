@@ -161,9 +161,8 @@ export async function createUmkm(data: CreateUmkmInput) {
             data: umkm
         }
     } catch (error) {
-        console.error(error);
         return {
-            error: true,
+            error: error,
             status: 500,
             message: 'UMKM not created'
         }
