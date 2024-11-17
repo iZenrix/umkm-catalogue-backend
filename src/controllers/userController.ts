@@ -21,7 +21,8 @@ export async function getProfile(req: AuthenticatedRequest, res: Response) {
                     select: {
                         name: true
                     }
-                }
+                },
+                umkms: true
             }
         });
 
