@@ -32,7 +32,7 @@ export async function getUmkmProducts(umkmId: number) {
     }
 }
 
-export async function createProduct(umkmId: number, name: string, price: number, description: string, images?: Express.Multer.File[],) {
+export async function createProduct(umkmId: number, name: string, price: string, description: string, images?: Express.Multer.File[],) {
     const productImageUrls: { url: string }[] = [];
     if (images && images.length > 0) {
         for (const image of images) {
@@ -55,27 +55,27 @@ export async function createProduct(umkmId: number, name: string, price: number,
         }
     }
 
-    const product = await prisma.umkmProduct.create({
-        data: {
-            name,
-            price,
-            description,
-            umkm_id: umkmId,
-            product_image: {create: productImageUrls}
-        }
-    });
+    try{
+        const product = await prisma.umkmProduct.create({
+            data: {
+                name,
+                price: parseInt(String(price)),
+                description,
+                umkm_id: parseInt(String(umkmId)),
+                product_image: {create: productImageUrls}
+            }
+        });
 
-    if (!product) {
+        return {
+            message: 'Product created successfully',
+            data: product
+        }
+    }catch(error){
         return {
             error: true,
             status: 500,
-            message: 'Product not created'
-        }
-    }
-
-    return {
-        message: 'Product created successfully',
-        data: product
+            message: error
+        };
     }
 }
 
