@@ -2,6 +2,18 @@ import prisma from '../models';
 import {put} from "@vercel/blob";
 
 export async function getUmkmProducts(umkmId: number) {
+    const existingUmkm = await prisma.umkm.findUnique({
+        where: {id: umkmId}
+    });
+
+    if (!existingUmkm) {
+        return {
+            error: true,
+            status: 404,
+            message: 'UMKM not found'
+        }
+    }
+
     const products = await prisma.umkmProduct.findMany({
         where: {umkm_id: umkmId}
     });

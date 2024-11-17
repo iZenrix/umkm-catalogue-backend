@@ -26,10 +26,10 @@ export async function createSingleProduct(req: Request, res: Response) {
 }
 
 export async function getAllProducts(req: Request, res: Response) {
-    const {umkmId} = req.body as {umkmId: number};
+    const {id} = req.params;
 
     try {
-        const result = await getUmkmProducts(umkmId);
+        const result = await getUmkmProducts(Number(id));
 
         if (result.error) {
             res.status(result.status).json({error: result.message});
