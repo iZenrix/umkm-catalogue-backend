@@ -9,7 +9,17 @@ enum ApprovalStatus {
 }
 
 export async function getUmkmList() {
-    const umkmList = await prisma.umkm.findMany();
+    const umkmList = await prisma.umkm.findMany(
+        {
+            include: {
+                user: true,
+                umkm_types: true,
+                images: true,
+                social_medias: true,
+                location: true,
+            }
+        }
+    );
 
     if (!umkmList) {
         return {
@@ -148,23 +158,15 @@ export async function createUmkm(data: CreateUmkmInput) {
             }
         });
 
-        if (!umkm) {
-            return {
-                error: true,
-                status: 500,
-                message: 'UMKM not created'
-            }
-        }
-
         return {
             message: 'UMKM created successfully',
             data: umkm
         }
     } catch (error) {
         return {
-            error: error,
+            error: true,
             status: 500,
-            message: 'UMKM not created'
+            message: error
         }
     }
 }
@@ -177,6 +179,7 @@ export async function getUmkmById(id: number) {
             umkm_types: true,
             images: true,
             social_medias: true,
+            location: true,
         }
     });
 

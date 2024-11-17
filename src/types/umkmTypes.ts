@@ -1,5 +1,5 @@
 export interface CreateUmkmInput {
-    categoryId: number;
+    categoryId: string;
     name: string;
     description?: string;
     contact: string;
@@ -12,6 +12,6 @@ export interface CreateUmkmInput {
     images?: Express.Multer.File[];
     panoramicImage?: Express.Multer.File;
     profileImage?: Express.Multer.File;
-    typeIds: number[];
-    userId: number;
+    typeIds: string[];
+    userId: string;
 }
