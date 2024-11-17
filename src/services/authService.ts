@@ -36,7 +36,8 @@ export async function loginUser(email: string, password: string) {
             data: {
                 id: user.id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                role: user.role.name
             },
             token
         };
