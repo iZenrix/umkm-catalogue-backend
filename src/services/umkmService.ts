@@ -9,7 +9,17 @@ enum ApprovalStatus {
 }
 
 export async function getUmkmList() {
-    const umkmList = await prisma.umkm.findMany();
+    const umkmList = await prisma.umkm.findMany(
+        {
+            include: {
+                user: true,
+                umkm_types: true,
+                images: true,
+                social_medias: true,
+                location: true,
+            }
+        }
+    );
 
     if (!umkmList) {
         return {
@@ -110,37 +120,19 @@ export async function createUmkm(data: CreateUmkmInput) {
         }
     }
 
-    let productImageUrl = '';
-    if (data.productImage) {
-        try {
-            const file = data.productImage as Express.Multer.File;
-
-            console.log('data product image:', data.productImage.originalname);
-
-            const productBlobResponse = await put(data.productImage.originalname, file.buffer, {
-                access: 'public',
-                token: process.env.VERCEL_BLOB_TOKEN,
-                contentType: data.productImage.mimetype,
-            });
-
-            productImageUrl = productBlobResponse.url;
-        } catch (error) {
-            console.error('Error uploading product image:', error);
-            return {
-                error: true,
-                status: 500,
-                message: 'Failed to upload product image'
-            };
-        }
-    }
-
     try {
         const umkm = await prisma.umkm.create({
             data: {
+                category_id: parseInt(String(data.categoryId)),
                 name: data.name,
                 description: data.description,
-                location: data.location,
-                category_id: parseInt(String(data.categoryId)),
+                location: {
+                    create: data.location ? {
+                        name: data.location.name ?? '',
+                        latitude: data.location.latitude ?? 0,
+                        longitude: data.location.longitude ?? 0
+                    } : undefined
+                },
                 panoramic_image: panoramicImageUrl,
                 user: {connect: {id: parseInt(String(data.userId))}},
                 umkm_types: {
@@ -150,7 +142,6 @@ export async function createUmkm(data: CreateUmkmInput) {
                     create: imageUrls
                 },
                 profile_image: profileImageUrl,
-                product_image: productImageUrl,
                 social_medias: {
                     create: data.socialMedias?.map((socialMedia) => ({
                         platform: socialMedia.platform,
@@ -167,24 +158,15 @@ export async function createUmkm(data: CreateUmkmInput) {
             }
         });
 
-        if (!umkm) {
-            return {
-                error: true,
-                status: 500,
-                message: 'UMKM not created'
-            }
-        }
-
         return {
             message: 'UMKM created successfully',
             data: umkm
         }
     } catch (error) {
-        console.error(error);
         return {
             error: true,
             status: 500,
-            message: 'UMKM not created'
+            message: error
         }
     }
 }
@@ -197,6 +179,7 @@ export async function getUmkmById(id: number) {
             umkm_types: true,
             images: true,
             social_medias: true,
+            location: true,
         }
     });
 
@@ -299,61 +282,47 @@ export async function updateUmkm(id: number, data: CreateUmkmInput) {
         }
     }
 
-    let productImageUrl = '';
-    if (data.productImage) {
-        try {
-            const file = data.productImage as Express.Multer.File;
-
-            console.log('data product image:', data.productImage.originalname);
-
-            const productBlobResponse = await put(data.productImage.originalname, file.buffer, {
-                access: 'public',
-                token: process.env.VERCEL_BLOB_TOKEN,
-                contentType: data.productImage.mimetype,
-            });
-
-            productImageUrl = productBlobResponse.url;
-        } catch (error) {
-            console.error('Error uploading product image:', error);
-            return {
-                error: true,
-                status: 500,
-                message: 'Failed to upload product image'
-            };
-        }
-    }
-
     try {
         const umkm = await prisma.umkm.update({
-            where: {id},
+            where: { id },
             data: {
                 name: data.name,
                 description: data.description,
-                location: data.location,
+                location: data.location ? {
+                    deleteMany: {},
+                    create: {
+                        name: data.location.name ?? '',
+                        latitude: data.location.latitude ?? 0,
+                        longitude: data.location.longitude ?? 0,
+                    }
+                } : undefined,
                 category_id: parseInt(String(data.categoryId)),
                 panoramic_image: panoramicImageUrl,
                 umkm_types: {
-                    set: Array.isArray(data.typeIds) ? data.typeIds.map(type => ({id: parseInt(String(type))})) : [{id: parseInt(String(data.typeIds)),}]
+                    set: Array.isArray(data.typeIds)
+                        ? data.typeIds.map((type) => ({ id: parseInt(String(type)) }))
+                        : [{ id: parseInt(String(data.typeIds)) }],
                 },
                 images: {
-                    create: imageUrls
+                    create: imageUrls,
                 },
                 profile_image: profileImageUrl,
-                product_image: productImageUrl,
                 social_medias: {
+                    deleteMany: {},
                     create: data.socialMedias?.map((socialMedia) => ({
                         platform: socialMedia.platform,
                         url: socialMedia.url,
                     })),
                 },
-                contact: data.contact
+                contact: data.contact,
             },
             include: {
                 user: true,
                 umkm_types: true,
                 images: true,
                 social_medias: true,
-            }
+                location: true,
+            },
         });
 
         if (!umkm) {
@@ -438,6 +407,23 @@ export async function umkmValidation(userId: number, id: number, status: string,
         };
     }
 
+    if(status === ApprovalStatus.APPROVED) {
+        const existingApprovedUmkm = await prisma.umkm.findFirst({
+            where: {
+                approval_status: ApprovalStatus.APPROVED,
+                id: id
+            }
+        });
+
+        if (existingApprovedUmkm) {
+            return {
+                error: true,
+                status: 400,
+                message: 'User already has an approved UMKM'
+            };
+        }
+    }
+
     const updateData: any = {
         approval_status: status as ApprovalStatus,
         approved_by: userId,
@@ -463,6 +449,40 @@ export async function umkmValidation(userId: number, id: number, status: string,
 
     return {
         message: `UMKM ${status === ApprovalStatus.APPROVED ? 'approved' : 'rejected'} successfully`,
+        data: umkm
+    };
+}
+
+export async function countViewIncrement(id: number) {
+    const existingUmkm = await prisma.umkm.findUnique({
+        where: { id }
+    });
+
+    if (!existingUmkm) {
+        return {
+            error: true,
+            status: 404,
+            message: 'UMKM not found'
+        };
+    }
+
+    const umkm = await prisma.umkm.update({
+        where: { id },
+        data: {
+            view_count: existingUmkm.view_count + 1
+        }
+    });
+
+    if (!umkm) {
+        return {
+            error: true,
+            status: 500,
+            message: 'Failed to increment view count'
+        };
+    }
+
+    return {
+        message: 'View count incremented successfully',
         data: umkm
     };
 }
