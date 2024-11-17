@@ -58,7 +58,14 @@ export async function createReview(umkmId: number, userId: number, rating: numbe
 
 export async function getReview(id: number) {
     const review = await prisma.review.findUnique({
-        where: {id}
+        where: {id},
+        include: {
+            user: {
+                select: {
+                    name: true
+                }
+            },
+        }
     });
 
     if (!review) {
@@ -143,7 +150,7 @@ export async function deleteReview(id: number) {
 
 export async function getReviewsByUMKM(umkmId: number) {
     const existingUMKM = await prisma.umkm.findUnique({
-        where: {id: umkmId}
+        where: {id: umkmId},
     });
 
     if (!existingUMKM) {
@@ -155,7 +162,14 @@ export async function getReviewsByUMKM(umkmId: number) {
     }
 
     const reviews = await prisma.review.findMany({
-        where: {umkm_id: umkmId}
+        where: {umkm_id: umkmId},
+        include: {
+            user: {
+                select: {
+                    name: true
+                }
+            }
+        }
     });
 
     return {
@@ -178,7 +192,14 @@ export async function getReviewsByUser(userId: number) {
     }
 
     const reviews = await prisma.review.findMany({
-        where: {user_id: userId}
+        where: {user_id: userId},
+        include: {
+            user: {
+                select: {
+                    name: true
+                }
+            }
+        }
     });
 
     return {
