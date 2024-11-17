@@ -26,9 +26,14 @@ export async function getProfile(req: AuthenticatedRequest, res: Response) {
             }
         });
 
+        const transformedUser = {
+            ...user,
+            role: user!.role.name,
+        };
+
         const data = {
             message: 'Successfully obtained user data',
-            data: {user}
+            data: transformedUser
         }
 
         res.json(data);
