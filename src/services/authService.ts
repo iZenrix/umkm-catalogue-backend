@@ -27,9 +27,7 @@ export async function loginUser(email: string, password: string) {
 
         const secret = process.env.JWT_SECRET!;
 
-        const expiresIn = 60 * 60;
-
-        const token = jwt.sign(payload, secret, {expiresIn: expiresIn});
+        const token = jwt.sign(payload, secret);
 
         return {
             message: 'User login successfully',
